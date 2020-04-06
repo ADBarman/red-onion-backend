@@ -20,79 +20,81 @@ app.get('/' , (req, res) => {
 
 
 app.get('/foods' , (req, res) => {
-    client = new MongoClient(uri ,{ useNewUrlParser:true });
+    client = new MongoClient(uri ,{useNewUrlParser:true});
     client.connect(err => {
-        const collection = client.db('redOnion').collection('foods');
-            collection.find().toArray((err,documents) => {
-                if(err){
-                    console.log(err);
+        if(err){
+            console.log(err);
+        }else{
+            const collection = client.db('redOnion').collection('foods');
+            collection.find().toArray((rej,documents) => {
+                if(rej){
+                    console.log(rej);
                     res.status(500).send("Failed to Fetch Data ")
                 }else{
                     res.send(documents);
-                }               
-            });
-            client.close();
-    });
-});
+                }
+                client.close()
+            })
+        }
+    })
+})
 
 app.get('/food/:id', (req,res) => {
-    client = new MongoClient(uri,{ useNewUrlParser:true })
+    client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true})
     const foodId = Number(req.params.id)
 
     client.connect(err => {
         const collection = client.db('redOnion').collection('foods');
-        //console.log(foodId);
+        console.log(foodId);
         collection.find({id:foodId}).toArray((err, documents) => {
             if(err){
                 console.log(err);
             }else{
                 res.send(documents[0]);
             }
-      
-        });
-        client.close();
-    });
-});
+            client.close();
+        })
+    })
+})
 
 app.get('/features' , (req,res) => {
-    client = new MongoClient(uri , { useNewUrlParser:true });
+    client = new MongoClient(uri , {useNewUrlParser:true , useUnifiedTopology: true});
     client.connect(err => {
         const collection = client.db('redOnion').collection('features');
-        collection.find().toArray((err,documents) => {
-            if(err){
+        collection.find().toArray((rej,documents) => {
+            if(rej){
                 res.status(500).send("Failed to fetch data");
             }else{
                 res.send(documents)
             }
-        }); 
-        client.close();
-    });
+        }) 
+        
+    })
 
-});
+})
 
-// Post
+// Post routes
 app.post('/submitorder' , (req,res) => {
     const data = req.body;
     console.log(data);
-    client = new MongoClient(uri , { useNewUrlParser:true });
+    client = new MongoClient(uri , {useNewUrlParser:true , useUnifiedTopology: true});
     client.connect(err => {
         const collection = client.db('redOnion').collection('orders');
-        collection.insert(data , (err, documents) =>  {
-            if(err){
+        collection.insert(data , (rej, result) =>  {
+            if(rej){
                 res.status(500).send("Failed to insert")
             }else{
-                res.send(documents[0])
+                res.send(result.ops[0])
             }
-        });
-        client.close();
-    });
-});
+        })
+    })
+})
 
-
+// Bellows are dummy post method used just one time
 app.post('/addfood' , (req,res) => {
     const data = req.body;
-    //console.log(data);
-    client = new MongoClient(uri , { useNewUrlParser:true });
+    console.log(data);
+    client = new MongoClient(uri , {useNewUrlParser:true , useUnifiedTopology: true});
     client.connect(err => {
         const collection = client.db('redOnion').collection('foods');
         collection.insert(data , (rej, result) =>  {
@@ -101,20 +103,18 @@ app.post('/addfood' , (req,res) => {
             }else{
                 res.send(result.ops)
             }
-        });
-        client.close();
-    });
-});
-
-app.post('/addfeatures' , (req, res) => {
+        })
+    })
+})
+app.post('/addfeatures' , (req,res) => {
     const data = req.body;
-    //console.log(data);
+    console.log(data);
     client = new MongoClient(uri , { useNewUrlParser:true });
     client.connect(err => {
         const collection = client.db('redOnion').collection('features');
-        collection.insert(data , (err, documents) =>  {
-            if(err){
-                res.status(500).send({message:err})
+        collection.insert(data , (rej, documents) =>  {
+            if(rej){
+                res.status(500).send("Failed to insert")
             }else{
                 res.send(documents)
             }
