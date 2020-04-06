@@ -74,7 +74,7 @@ app.get('/features' , (req,res) => {
 app.post('/submitorder' , (req,res) => {
     const data = req.body;
     console.log(data);
-    client = new MongoClient(uri , {useNewUrlParser:true , useUnifiedTopology: true});
+    client = new MongoClient(uri , { useNewUrlParser:true });
     client.connect(err => {
         const collection = client.db('redOnion').collection('orders');
         collection.insert(data , (err, documents) =>  {
