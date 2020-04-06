@@ -20,7 +20,7 @@ app.get('/' , (req, res) => {
 
 
 app.get('/foods' , (req, res) => {
-    client = new MongoClient(uri ,{ useNewUrlParser:true });
+    client = new MongoClient(uri ,{useNewUrlParser:true});
     client.connect(err => {
         if(err){
             console.log(err);
@@ -39,7 +39,7 @@ app.get('/foods' , (req, res) => {
     })
 })
 
-app.get('/food/:id', (req, res) => {
+app.get('/food/:id', (req,res) => {
     client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true})
     const foodId = Number(req.params.id)
 
@@ -49,16 +49,15 @@ app.get('/food/:id', (req, res) => {
         collection.find({id:foodId}).toArray((err, documents) => {
             if(err){
                 console.log(err);
-                res.status(500).send({message:err});
             }else{
                 res.send(documents[0]);
             }
-        });
-        client.close();
-    });
-});
+            client.close();
+        })
+    })
+})
 
-app.get('/features' , (req, res) => {
+app.get('/features' , (req,res) => {
     client = new MongoClient(uri , { useNewUrlParser:true });
     client.connect(err => {
         const collection = client.db('redOnion').collection('features');
