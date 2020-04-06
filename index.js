@@ -113,11 +113,11 @@ app.post('/addfeatures' , (req,res) => {
     client = new MongoClient(uri , {useNewUrlParser:true , useUnifiedTopology: true});
     client.connect(err => {
         const collection = client.db('redOnion').collection('features');
-        collection.insert(data , (rej, result) =>  {
+        collection.insert(data , (rej, documents) =>  {
             if(rej){
                 res.status(500).send("Failed to insert")
             }else{
-                res.send(result.ops)
+                res.send(documents)
             }
         })
     })
