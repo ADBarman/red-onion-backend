@@ -20,7 +20,7 @@ app.get('/' , (req, res) => {
 
 
 app.get('/foods' , (req, res) => {
-    client = new MongoClient(uri ,{useNewUrlParser:true});
+    client = new MongoClient(uri ,{ useNewUrlParser:true });
     client.connect(err => {
         if(err){
             console.log(err);
@@ -39,26 +39,27 @@ app.get('/foods' , (req, res) => {
     })
 })
 
-app.get('/food/:id', (req,res) => {
+app.get('/food/:id', (req, res) => {
     client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true})
     const foodId = Number(req.params.id)
 
     client.connect(err => {
         const collection = client.db('redOnion').collection('foods');
-        console.log(foodId);
+        //console.log(foodId);
         collection.find({id:foodId}).toArray((err, documents) => {
             if(err){
                 console.log(err);
+                res.status(500).send({message:err});
             }else{
                 res.send(documents[0]);
             }
-            client.close();
-        })
-    })
-})
+        });
+        client.close();
+    });
+});
 
-app.get('/features' , (req,res) => {
-    client = new MongoClient(uri , {useNewUrlParser:true , useUnifiedTopology: true});
+app.get('/features' , (req, res) => {
+    client = new MongoClient(uri , { useNewUrlParser:true });
     client.connect(err => {
         const collection = client.db('redOnion').collection('features');
         collection.find().toArray((rej,documents) => {
@@ -67,11 +68,11 @@ app.get('/features' , (req,res) => {
             }else{
                 res.send(documents)
             }
-        }) 
-        
-    })
+        }); 
+        client.close();
+    });
 
-})
+});
 
 // Post
 app.post('/submitorder' , (req,res) => {
@@ -93,7 +94,7 @@ app.post('/submitorder' , (req,res) => {
 
 app.post('/addfood' , (req,res) => {
     const data = req.body;
-    console.log(data);
+    //console.log(data);
     client = new MongoClient(uri , { useNewUrlParser:true });
     client.connect(err => {
         const collection = client.db('redOnion').collection('foods');
@@ -110,7 +111,7 @@ app.post('/addfood' , (req,res) => {
 
 app.post('/addfeatures' , (req, res) => {
     const data = req.body;
-    console.log(data);
+    //console.log(data);
     client = new MongoClient(uri , { useNewUrlParser:true });
     client.connect(err => {
         const collection = client.db('redOnion').collection('features');
