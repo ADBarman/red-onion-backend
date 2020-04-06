@@ -94,7 +94,7 @@ app.post('/submitorder' , (req,res) => {
 app.post('/addfood' , (req,res) => {
     const data = req.body;
     console.log(data);
-    client = new MongoClient(uri , {useNewUrlParser:true , useUnifiedTopology: true});
+    client = new MongoClient(uri , { useNewUrlParser:true });
     client.connect(err => {
         const collection = client.db('redOnion').collection('foods');
         collection.insert(data , (rej, result) =>  {
@@ -103,25 +103,27 @@ app.post('/addfood' , (req,res) => {
             }else{
                 res.send(result.ops)
             }
-        })
-    })
-})
+        });
+        client.close();
+    });
+});
 
-app.post('/addfeatures' , (req,res) => {
+app.post('/addfeatures' , (req, res) => {
     const data = req.body;
     console.log(data);
-    client = new MongoClient(uri , {useNewUrlParser:true , useUnifiedTopology: true});
+    client = new MongoClient(uri , { useNewUrlParser:true });
     client.connect(err => {
         const collection = client.db('redOnion').collection('features');
-        collection.insert(data , (rej, result) =>  {
-            if(rej){
-                res.status(500).send("Failed to insert")
+        collection.insert(data , (err, documents) =>  {
+            if(err){
+                res.status(500).send({message:err})
             }else{
-                res.send(result.ops)
+                res.send(documents)
             }
-        })
-    })
-})
+        });
+        client.close();
+    });
+});
 
 
 const port = process.env.PORT || 3200;
