@@ -57,8 +57,8 @@ app.get('/food/:id', (req,res) => {
     })
 })
 
-app.get('/features' , (req,res) => {
-    client = new MongoClient(uri , {useNewUrlParser:true , useUnifiedTopology: true});
+app.get('/features' , (req, res) => {
+    client = new MongoClient(uri , { useNewUrlParser:true });
     client.connect(err => {
         const collection = client.db('redOnion').collection('features');
         collection.find().toArray((rej,documents) => {
@@ -67,11 +67,11 @@ app.get('/features' , (req,res) => {
             }else{
                 res.send(documents)
             }
-        }) 
-        
-    })
+        }); 
+        client.close();
+    });
 
-})
+});
 
 // Post routes
 app.post('/submitorder' , (req,res) => {
@@ -112,8 +112,8 @@ app.post('/addfeatures' , (req,res) => {
     client = new MongoClient(uri , { useNewUrlParser:true });
     client.connect(err => {
         const collection = client.db('redOnion').collection('features');
-        collection.insert(data , (rej, documents) =>  {
-            if(rej){
+        collection.insert(data , (err, documents) =>  {
+            if(err){
                 res.status(500).send("Failed to insert")
             }else{
                 res.send(documents)
