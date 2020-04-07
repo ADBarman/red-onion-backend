@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 
 const uri = process.env.DB_PATH;
-let client = new MongoClient(uri ,{ useNewUrlParser:true })
+let client = new MongoClient(uri ,{ useNewUrlParser:true });
 
 
 
