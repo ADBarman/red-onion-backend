@@ -37,7 +37,7 @@ app.get('/foods' , (req, res) => {
 });
 
 app.get('/food/:id', (req,res) => {
-    client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true})
+    client = new MongoClient(uri,{ useNewUrlParser:true })
     const foodId = Number(req.params.id)
 
     client.connect(err => {
@@ -49,10 +49,11 @@ app.get('/food/:id', (req,res) => {
             }else{
                 res.send(documents[0]);
             }
-            client.close();
-        })
-    })
-})
+            
+        });
+        client.close();
+    });
+});
 
 app.get('/features' , (req, res) => {
     client = new MongoClient(uri , { useNewUrlParser:true });
@@ -70,7 +71,7 @@ app.get('/features' , (req, res) => {
 
 });
 
-// Post routes
+// Post
 app.post('/submitorder' , (req,res) => {
     const data = req.body;
     console.log(data);
@@ -91,7 +92,7 @@ app.post('/submitorder' , (req,res) => {
 app.post('/addfood' , (req,res) => {
     const data = req.body;
     console.log(data);
-    client = new MongoClient(uri , {useNewUrlParser:true , useUnifiedTopology: true});
+    client = new MongoClient(uri , { useNewUrlParser:true });
     client.connect(err => {
         const collection = client.db('redOnion').collection('foods');
         collection.insert(data , (rej, documents) =>  {
