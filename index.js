@@ -65,7 +65,7 @@ app.get('/features' , (req, res) => {
             if(rej){
                 res.status(500).send("Failed to fetch data");
             }else{
-                res.send(documents)
+                res.send(documents);
             }
         }); 
         client.close();
@@ -97,15 +97,17 @@ app.post('/addfood' , (req,res) => {
     client = new MongoClient(uri , {useNewUrlParser:true , useUnifiedTopology: true});
     client.connect(err => {
         const collection = client.db('redOnion').collection('foods');
-        collection.insert(data , (rej, result) =>  {
+        collection.insert(data , (rej, documents) =>  {
             if(rej){
-                res.status(500).send("Failed to insert")
+                res.status(500).send("Failed to insert");
             }else{
-                res.send(result.ops)
+                res.send(documents);
             }
-        })
-    })
-})
+        });
+        client.close();
+    });
+});
+
 app.post('/addfeatures' , (req,res) => {
     const data = req.body;
     console.log(data);
@@ -114,9 +116,9 @@ app.post('/addfeatures' , (req,res) => {
         const collection = client.db('redOnion').collection('features');
         collection.insert(data , (err, documents) =>  {
             if(err){
-                res.status(500).send("Failed to insert")
+                res.status(500).send("Failed to insert");
             }else{
-                res.send(documents)
+                res.send(documents);
             }
         });
         client.close();
