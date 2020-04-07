@@ -20,24 +20,21 @@ app.get('/' , (req, res) => {
 
 
 app.get('/foods' , (req, res) => {
-    client = new MongoClient(uri ,{useNewUrlParser:true});
+    client = new MongoClient(uri ,{ useNewUrlParser:true });
     client.connect(err => {
-        if(err){
-            console.log(err);
-        }else{
             const collection = client.db('redOnion').collection('foods');
-            collection.find().toArray((rej,documents) => {
-                if(rej){
-                    console.log(rej);
-                    res.status(500).send("Failed to Fetch Data ")
+            collection.find().toArray((err, documents) => {
+                if(err){
+                    console.log(err);
+                    res.status(500).send("Failed to Fetch Data ");
                 }else{
                     res.send(documents);
                 }
-                client.close()
-            })
-        }
-    })
-})
+                
+            });
+            client.close();
+    });
+});
 
 app.get('/food/:id', (req,res) => {
     client = new MongoClient(uri,{useNewUrlParser:true,useUnifiedTopology: true})
