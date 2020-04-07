@@ -37,8 +37,8 @@ app.get('/foods' , (req, res) => {
 });
 
 app.get('/food/:id', (req,res) => {
-    client = new MongoClient(uri,{ useNewUrlParser:true })
-    const foodId = Number(req.params.id)
+    client = new MongoClient(uri,{ useNewUrlParser:true });
+    const foodId = Number(req.params.id);
 
     client.connect(err => {
         const collection = client.db('redOnion').collection('foods');
